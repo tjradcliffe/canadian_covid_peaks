@@ -1,5 +1,5 @@
 import math
-from logistic_constraints import LowerLogisticConstraint
+from simple_minimizer import LowerLogisticConstraint
 
 class PeaksObjective:
     
