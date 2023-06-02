@@ -1,6 +1,8 @@
 # Canadian Covid Peaks
 
-Analysis of Canadian covid hospitalization data: extraction of Gaussians and fitting them to SEIR model
+Analysis of Canadian covid hospitalization data: extraction of Gaussians and fitting them to SEIR model.
+
+Write up of my initial use of this code: https://worldofwonders.substack.com/p/spring-2023-canadian-covid-update
 
 Downloading requires requests:
 
