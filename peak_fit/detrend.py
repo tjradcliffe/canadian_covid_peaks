@@ -69,4 +69,9 @@ with open("can_hosp_patients_fit.csv", "w") as outFile:
 with open("can_hosp_patients.dat", "w") as outFile:
     for nDay in range(len(pObjective.lstData)):
         pDate = pStartDate + timedelta(days=nDay)
-        outFile.write(" ".join(map(str, (pDate.date(), pObjective.lstData[nDay])))+"\n")
+        fFit = pObjective.fit(nDay, lstVertex)
+        lstComponents = pObjective.components(nDay, lstVertex)
+        lstPartialSums = [sum(lstComponents[0:nI]) for nI in range(1, len(lstComponents)+1)]
+        lstOutput = [pDate.date(), pObjective.lstData[nDay]]
+        lstOutput.extend(lstPartialSums)
+        outFile.write(" ".join(map(str, lstOutput))+"\n")
