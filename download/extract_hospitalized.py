@@ -26,4 +26,5 @@ def extractHospitalized(strSource, strDest):
 if __name__ == "__main__":
     strSource = "canada-covid-data.csv"
     strDest = "can_hosp_patients.csv"
-    extractHospitalized(strSource, strDest)
+    pMostRecent = extractHospitalized(strSource, strDest)
+    print("Data to: ", pMostRecent)
