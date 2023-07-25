@@ -21,14 +21,17 @@ class PeaksObjective:
                 if nMaxDay >= 0 and len(self.lstData) > nMaxDay:
                     break
 
-    def __call__(self, lstX):
+    def __call__(self, lstX, nCut = 0):
         
         # lstX has structure pos1, width1, area1, pos2 ...
+        # nCut allows tail error to be computed
 
         fError = 0.0
         for nDay, fValue in enumerate(self.lstData):
+            if nCut > 0 and nDay < nCut:
+                continue
             fError += (self.fit(nDay, lstX)-fValue)**2
-        return math.sqrt(fError/nDay)
+        return math.sqrt(fError/(nDay-nCut))
 
     def fit(self, nDay, lstX):
         fFit = 0.0

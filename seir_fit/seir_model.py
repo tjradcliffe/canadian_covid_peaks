@@ -259,14 +259,16 @@ class SEIRModelObjective:
 
 if __name__ == "__main__":
     
-    nPeak = 5 # first omicron
+    nPeak = -1 # first omicron
     if len(sys.argv) > 1:
         nPeak = int(sys.argv[1])
 
     if nPeak < 0:
         bLoop = True
         nPeak = 1
-        nPeakMax = 11
+        strInputFile = "can_hosp_patients_fit.csv"
+        strHeader = open(strInputFile).readline()
+        nPeakMax = nPeak+(len(strHeader.strip().split())-1)//3
     else:
         nPeakMax = nPeak+1
 
