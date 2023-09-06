@@ -81,7 +81,7 @@ lstScales = [1 for nI in range(len(lstStarts))]
 
 nDim = len(lstStarts)
 pMinimizer = sm.SimpleMinimizer(nDim)
-pObjective = PeaksObjective("can_hosp_patients.csv")
+pObjective = PeaksObjective("can_hosp_patients.csv", 1255) # 2023-07-01, 1225 for 2023-06-01
 pMinimizer.setObjective(pObjective)
 pMinimizer.setStarts(lstStarts)
 pMinimizer.setScales(lstScales)

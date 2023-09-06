@@ -3,8 +3,9 @@ from simple_minimizer import LowerLogisticConstraint
 
 class PeaksObjective:
     
-    def __init__(self, strFilename, nMaxDay = -1, nMInDay = 0):
-        
+    def __init__(self, strFilename, nMaxDay = -1):
+
+        self.nMaxDay = nMaxDay
         self.lstData = []
         self.strStartDate = ""
         self.pConstraint = LowerLogisticConstraint(0) # force all parameters > 0
@@ -15,11 +16,7 @@ class PeaksObjective:
                     self.strStartDate = strLine.strip().split()[1]
                     continue
                 nCount += 1
-                if nCount < nMInDay:
-                    continue
                 self.lstData.append(float(strLine.strip().split()[1]))
-                if nMaxDay >= 0 and len(self.lstData) > nMaxDay:
-                    break
 
     def __call__(self, lstX, nCut = 0):
         
@@ -28,6 +25,8 @@ class PeaksObjective:
 
         fError = 0.0
         for nDay, fValue in enumerate(self.lstData):
+            if self.nMaxDay > 0 and nDay > self.nMaxDay:
+                break
             if nCut > 0 and nDay < nCut:
                 continue
             fError += (self.fit(nDay, lstX)-fValue)**2
