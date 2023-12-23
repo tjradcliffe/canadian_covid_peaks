@@ -1,0 +1,36 @@
+Fit function: Baseline + Variable*(1+cos(2*pi*(x-Shift)/12))
+
+For Covid:	
+
+Baseline = 2171.03341673223
+Variable = 911.365845243164
+Shift = 1.21945458910288
+
+For Flu (2018-2019 season):
+
+BaselineF = 0 [pinned]
+VariableF = 214.481629189435
+ShiftF = 1.54539395290907
+    
+The shift indicates a peak in mid-January, as the months
+are numbered from 1 in the data.
+
+Flu is enormously variable, truly seasonal, going from a 
+literal handful of cases in late summer to hundreds
+in January.
+
+Covid is at most very mildly seasonal: the baseline is
+as large af the variability, so there is always a lot of
+covid around. When anyone has a "summer cold"
+these days, it is almost certainly covid.
+
+
+Some other viruses follow similar pattern to flu:
+
+https://pubmed.ncbi.nlm.nih.gov/31303294/
+
+Also: "Annual seasonality of RSV was observed in all countries, which overlapped to a large extent with the influenza activity."
+from: https://pubmed.ncbi.nlm.nih.gov/32163226/
+
+But: it appears rhinovirus is more like covid:
+https://www.nature.com/articles/s41598-018-37481-y
