@@ -9,7 +9,7 @@ nSum = 0
 nCount = 0
 lstMonthSums = [[0 for nI in range(12)] for nJ in range(nYears)]
 lstMonthDays = [[0 for nI in range(12)] for nJ in range(nYears)]
-with open("seir_fit/can_hosp_patients.dat") as inFile:
+with open("../seir_fit/can_hosp_patients.dat") as inFile:
     for strLine in inFile:
         if strLine.strip().startswith("#"): continue
         
@@ -19,6 +19,8 @@ with open("seir_fit/can_hosp_patients.dat") as inFile:
         if pDate >= p2022Start and pDate <= p2022End:
             nSum += fCases
             nCount += 1
+        if ((pDate.month == 1 or pDate.month == 2) and pDate.year == 2022) or (pDate.month == 12 and pDate.year == 2021):
+            continue
         lstMonthSums[pDate.year-nStartYear][pDate.month-1] += fCases
         lstMonthDays[pDate.year-nStartYear][pDate.month-1] += 1
 
@@ -26,13 +28,15 @@ print("2022 Average: ", nSum/nCount)
 lstMonthAverage = [0 for nI in range(12)]
 for nYear in range(nYears):
     for nMonth, fCount in enumerate(lstMonthSums[nYear]):
-        lstMonthAverage[nMonth] += fCount/lstMonthDays[nYear][nMonth]
+        if fCount > 0:
+            lstMonthAverage[nMonth] += fCount/lstMonthDays[nYear][nMonth]
 
 lstMonthAverage = [fValue/nYears for fValue in lstMonthAverage]
 lstMonthSdev = [0 for nI in range(12)]
 for nMonth, fMean in enumerate(lstMonthAverage):
     for nYear in range(nYears):
-        lstMonthSdev[nMonth] += (fMean-lstMonthSums[nYear][nMonth]/lstMonthDays[nYear][nMonth])**2
+        if lstMonthDays[nYear][nMonth] > 0:
+            lstMonthSdev[nMonth] += (fMean-lstMonthSums[nYear][nMonth]/lstMonthDays[nYear][nMonth])**2
 lstMonthSdev = [math.sqrt(fValue)/(nYears-1) for fValue in lstMonthSdev]
 
 for nI in range(12):
