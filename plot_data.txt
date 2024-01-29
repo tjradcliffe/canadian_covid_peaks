@@ -1,0 +1,2 @@
+cd "seir_fit"
+plot "can_hosp_patients_fit.csv" using 2:3 title "Fit to Gaussian Peaks", 5000 title "Politically Unacceptable Threshold", "can_hosp_patients.dat" using 1:2 title "Manipulated-Looking Data post-2023-10"
