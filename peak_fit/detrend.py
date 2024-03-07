@@ -72,7 +72,7 @@ lstStarts = [110.08030684934468, 1299.3806525595394, 3103.7808699590696,
 998.9066601818656, 1369.292524014261, 4875.776505594954, 
 1063.3540440569411, 1917.7203151486415, 3389.7927566803623, 
 1152.1487891448894, 15695.61214457163, 3351.9063429893113,
-1400, 15000, 6000]
+1400, 3500, 3000]
 
 nFinal = len(lstStarts)//3-8 # location of final unambiguous
 print(nFinal)
@@ -82,7 +82,7 @@ lstScales = [1 for nI in range(len(lstStarts))]
 
 nDim = len(lstStarts)
 pMinimizer = sm.SimpleMinimizer(nDim)
-pObjective = PeaksObjective("can_hosp_patients.csv", 1255) # 2023-07-01, 1225 for 2023-06-01
+pObjective = PeaksObjective("can_hosp_patients.csv") # 2023-07-01, 1225 for 2023-06-01
 pMinimizer.setObjective(pObjective)
 pMinimizer.setStarts(lstStarts)
 pMinimizer.setScales(lstScales)
