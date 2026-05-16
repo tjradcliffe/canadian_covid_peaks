@@ -1,3 +1,4 @@
+from datetime import date
 import os
 
 nLocation = 0
@@ -29,13 +30,31 @@ with open("wastewater_aggregate.csv") as inFile:
 
 for strLocation in lstLocations:
     print(strLocation)
-    with open("wastewater_aggregate.csv") as inFile, open(strLocation.lower().replace(".","").replace(" ", "_").replace("'","")+".dat", "w") as outFile:
+    strFirstDate = ""
+    strLastDate = ""
+    bHaveData = False
+    strFilename = strLocation.lower().replace(" - ", "_").replace(".","").replace(" ", "_").replace("'","")+".dat"
+    with open("wastewater_aggregate.csv") as inFile, open(strFilename, "w") as outFile:
         lstHeader = inFile.readline().strip().split(",")
         for strLine in inFile:
             lstLine = strLine.strip().split(",")
             if len(lstLine) < 14: continue
-            if lstLine[nLocation] != strLocation: continue
+            if lstLine[nLocation] != strLocation: 
+                if bHaveData:
+                    break
+                else:
+                    continue
             if lstLine[nVirus] != "covN2": continue
+            bHaveData = True
             fError = float(lstLine[nMax])-float(lstLine[nMin])
 #            print(lstLine[nWeekStart], lstLine[nWeeklyAvg])
+            if strFirstDate == "":
+                strFirstDate = lstLine[nWeekStart]
+            strLastDate = lstLine[nWeekStart]
             outFile.write(lstLine[nWeekStart]+" "+lstLine[nWeeklyAvg]+"\n")
+            
+    pFirstDate = date.fromisoformat(strFirstDate)
+    pLastDate = date.fromisoformat(strLastDate)
+    if pFirstDate > date(2023, 1, 1) or pLastDate < date(2026, 5, 1):
+        os.unlink(strFilename)
+        
