@@ -34,7 +34,7 @@ for strLocation in lstLocations:
     strLastDate = ""
     bHaveData = False
     strFilename = strLocation.lower().replace(" - ", "_").replace(".","").replace(" ", "_").replace("'","")+".dat"
-    with open("wastewater_aggregate.csv") as inFile, open(strFilename, "w") as outFile:
+    with open("wastewater_aggregate.csv") as inFile, open(os.path.join("cities", strFilename), "w") as outFile:
         lstHeader = inFile.readline().strip().split(",")
         for strLine in inFile:
             lstLine = strLine.strip().split(",")
@@ -56,5 +56,5 @@ for strLocation in lstLocations:
     pFirstDate = date.fromisoformat(strFirstDate)
     pLastDate = date.fromisoformat(strLastDate)
     if pFirstDate > date(2023, 1, 1) or pLastDate < date(2026, 5, 1):
-        os.unlink(strFilename)
+        os.unlink(os.path.join("cities", strFilename))
         
