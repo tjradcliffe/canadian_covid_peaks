@@ -1,0 +1,38 @@
+2026-05-27
+
+Calibration: consider the first omicron peak.
+
+Fit the waste-water peak.
+Find some data source that gives the peak rate
+of infection in Canada.
+Use this to convert waste water peak value to
+number of people infected in each jurisdiction.
+
+=> this is very approximate, but should allow me
+to work with absolute numbers of people, which are
+what matter to extinction
+
+FIRST: find fraction of people infected at peak of
+the first omicron wave.
+
+NEJM: https://www.nejm.org/doi/full/10.1056/NEJMc2202879
+See supplementary data file ()
+And: "When we applied the between-phase incidence 
+among vaccinated or unvaccinated participants to the 
+29.7 million adults in Canada, we found that an 
+estimated 9.0 million adults (95% CI, 7.9 to 10.2 million) 
+had been newly infected during the omicron BA.1/1.1 
+wave, including 0.9 million infections (95% CI, 0.6 to 1.2 
+million) among 2.3 million unvaccinated adults"
+
+So best estimate of total area under omicron curve is
+0.303 times the population of the jurisdiction.
+
+This is enough to calibrate with once I have a fit to
+the omicron peak for each case.
+
+NEXT: fit to omicron peak for each case and get the
+relationship between waste water copy number and
+case number.
+
+
