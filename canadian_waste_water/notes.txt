@@ -33,6 +33,14 @@ the omicron peak for each case.
 
 NEXT: fit to omicron peak for each case and get the
 relationship between waste water copy number and
-case number.
+case number. [DONE]
 
+2026-05-28
+
+city_ratios.dat gives the ratio of infected people to
+waste-water peak area for the first omicron peak.
+
+This is adequate to normalize a model to absolute
+case numbers, which is what I need to estimate the
+effect of reducing spread.
 
