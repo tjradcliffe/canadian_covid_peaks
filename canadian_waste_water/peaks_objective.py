@@ -5,13 +5,13 @@ pStartDate = date(2023, 7, 1)
 
 class PeaksObjective:
     
-    def __init__(self, strFilename):
+    def __init__(self, strFilename, pStartDate=date(2023, 7, 1), pEndDate = None):
 
         self.mapData = {}
         with open(strFilename) as inFile:
             for strLine in inFile:
                 pDate = date.fromisoformat(strLine.strip().split()[0])
-                if  pDate >= pStartDate:
+                if  pDate >= pStartDate and (pEndDate == None or pDate <= pEndDate):
                     nDays = (pDate-pStartDate).days
                     self.mapData[nDays] = float(strLine.strip().split()[1])
         self.lstDays = list(self.mapData.keys())
