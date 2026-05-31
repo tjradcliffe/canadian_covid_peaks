@@ -81,7 +81,7 @@ def runFitterPost(strFilename):
     pMinimizer.setStarts(lstStarts)
     pMinimizer.setScales(lstScales)
 
-    print("Fitting... this may take a minute or two...")
+    print("Fitting...", strFilename, "this may take a minute or two...")
     nCount, pResult, nReason = pMinimizer.minimize()
     lstVertex = pResult.getVertex()
 
@@ -92,13 +92,13 @@ def runFitterPost(strFilename):
     print("Peak Position Size Width")
     pStartDate = date(2023, 7, 1)
     for nI in range(0, len(lstVertex[1:]), 3):
-        pDate = pStartDate+timedelta(days=lstVertex[nI+2])
+        pDate = pStartDate+timedelta(days=lstVertex[nI+1])
         print(int(nI/3)+1, pDate, lstVertex[nI+1], lstVertex[nI], math.sqrt(lstVertex[nI+2]))
 
     print("")
-    strOutputFile = strFilename.replace(".dat", "_fit.dat")
-    strDiffFile = strFilename.replace(".dat", "_diff.dat")
-    strParameterFile = strFilename.replace(".dat", "_parameters.dat")
+    strOutputFile = strFilename.replace(".dat", "_fit.dat").replace("cities", "fits")
+    strParameterFile = strFilename.replace(".dat", "_parameters.dat").replace("cities", "fits")
+    lstAreas = []
     with open(strParameterFile, "w") as outFile:
         outFile.write("# slope: "+str(lstVertex[0])+"\n")
         outFile.write("# Peak Date Day SDev Area\n")
@@ -107,6 +107,7 @@ def runFitterPost(strFilename):
             print(lstVertex[nPeak:nPeak+3])
             fSDev = math.sqrt(lstVertex[nPeak+2]/2)
             fArea = lstVertex[nPeak]*math.sqrt(2*math.pi)*fSDev
+            lstAreas.append(fArea)
             pDate = pStartDate+timedelta(days=lstVertex[nPeak+1])
             outFile.write(" ".join(map(str, (nCount, pDate, lstVertex[nPeak+1], fSDev, fArea)))+"\n")
             nCount += 1
@@ -116,18 +117,13 @@ def runFitterPost(strFilename):
         outFile.write("# "+" ".join(map(str, lstVertex))+"\n")
         outFile.write("# "+pStartDate.isoformat()+"\n")
         for nDay in pObjective.lstDays:
-            pDate = pStartDate+timedelta(days=nDay)
-            fFit = pObjective.fit(nDay, lstVertex)
-            lstComponents = pObjective.components(nDay, lstVertex)
-            outFile.write(" ".join(map(str, [pDate, fFit]+lstComponents))+"\n")
-            
-    print("Writing diff to: ", strDiffFile)    
-    with open(strDiffFile, "w") as outFile:
-        for nDay  in pObjective.lstDays:
             fValue = pObjective.mapData[nDay]
             pDate = pStartDate+timedelta(days=nDay)
             fFit = pObjective.fit(nDay, lstVertex)
-            outFile.write(" ".join(map(str, (pDate, 2*(fValue-fFit)/(fValue+fFit))))+"\n")
+            lstComponents = pObjective.components(nDay, lstVertex)
+            outFile.write(" ".join(map(str, [pDate, fValue, fFit]+lstComponents))+"\n")
+    
+    return lstAreas
 
 if __name__ == "__main__":
 
@@ -146,14 +142,33 @@ if __name__ == "__main__":
 "saskatoon.dat": 266141,
 "toronto.dat": 2794356,
 "winnipeg.dat": 749607}
-    
+
+    mapRatios = {}
     with open(os.path.join("omicron", "city_ratios.dat"), "w") as outFile:
         outFile.write("# City nInfected/WasteWaterPeakArea\n")
         for strCity in mapCities.keys():
             fArea = runFitterPre(os.path.join("cities", strCity))
             nInfected = mapCities[strCity]*fInfectedFraction
             fRatio = nInfected/fArea
+            mapRatios[strCity] = fRatio
             outFile.write(strCity.replace(".dat","")+" "+str(fRatio)+"\n")
         
-        
+    strPlot = "plot "
+    for strCity in mapCities.keys():
+        strOutputFile = os.path.join("fits", strCity.replace(".dat", "_waves.dat"))
+        strPlot += '"'+strOutputFile+'" title "'+strCity.replace(".dat","").upper()+'", '
+        with open(strOutputFile, "w") as outFile:
+            outFile.write("# wave infectedCount\n")
+            lstAreas = runFitterPost(os.path.join("cities", strCity))
+            fRatio = mapRatios[strCity]
+            nPopulation = mapCities[strCity]
+            print()
+            print(strCity.replace(".dat","").upper())
+            for nI, fArea in enumerate(lstAreas):
+                print(int(fArea*fRatio)/nPopulation, end=' ')
+                outFile.write(str(nI+2023)+" "+str(fArea)+"\n")
+            print()
+            print()
+    
+    print(strPlot)
     

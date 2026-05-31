@@ -44,3 +44,24 @@ This is adequate to normalize a model to absolute
 case numbers, which is what I need to estimate the
 effect of reducing spread.
 
+2026-05-30
+
+Successfully fit all cities of interest. Next is to start
+on modelling, either via SEIR or MC. First objective 
+is to fit the most recent peak, then to predict the
+effect of various interventions with regard to 
+transmission probability based on clean air and/or
+masking of a fraction of the population.
+
+One conclusion from the analysis so far is that the
+AREA of the waves is not decreasing in general. The
+2024 wave was in most cases as big or bigger than
+the 2023 and 2025 waves.
+
+Also: there is some actual seasonality in these data!
+
+Three years isn't really enough to say, but there does
+appear to be a lull in the spring and a peak in the late
+fall. This is quite different from the early years of the
+ongoing pandemic.
+
