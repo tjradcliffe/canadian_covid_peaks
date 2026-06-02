@@ -1,13 +1,15 @@
 from datetime import date
 
 lstCities = ["halifax", "halifax_halifax", "north_battleford",
-"regina", "saskatoon", "toronto", "winnipeg", "metro_vancouver"]
+"regina", "saskatoon", "toronto", "winnipeg", "metro_vancouver", 
+"british_columbia", "alberta", "saskatchewan", "manitoba", "ontario", "nova_scotia", "canada"]
 
 # these are urban populations, not metro area populations
-lstPopulations = [228280, 156141, 13836, 226404, 266141, 2794356,  749607, 2642825]  
+lstPopulations = [228280, 156141, 13836, 226404, 266141, 2794356,  749607, 2642825,
+5000879, 4262635, 1132505, 1342153, 14223942, 969383, 36991981]  
 
 for nI, strCity in enumerate(lstCities):
-    print(strCity, lstPopulations[nI]/1E6)
+    print('"'+strCity+'.dat":', lstPopulations[nI],",")
     
 # start at 2023-07-01 and consider three peaks at 2024-01-01, 2024-10-01, and
 # 2025-11-01 (starting points) with standard deviations of 90 days.

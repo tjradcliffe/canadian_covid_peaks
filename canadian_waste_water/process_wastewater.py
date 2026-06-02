@@ -56,5 +56,6 @@ for strLocation in lstLocations:
     pFirstDate = date.fromisoformat(strFirstDate)
     pLastDate = date.fromisoformat(strLastDate)
     if pFirstDate > date(2023, 1, 1) or pLastDate < date(2026, 5, 1):
+        print("UNLINK:", strFilename, pFirstDate, pLastDate)
         os.unlink(os.path.join("cities", strFilename))
         

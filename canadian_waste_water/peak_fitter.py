@@ -7,6 +7,10 @@ import sys
 import simple_minimizer as sm
 from peaks_objective import PeaksObjective
 
+"""
+NOTE: peak area is (copies/ml)*days, peak height is (copies/ml) and peak width is days
+"""
+
 mapConvergenceReasons = {-1: "Exceeded iteration limit", 1: "Closest points indistinguishable", 
                                                  2: "Met fractional tolerance", 3:"Minimum scale achieved"}
 
@@ -26,7 +30,7 @@ def runFitterPre(strFilename):
     pMinimizer.setStarts(lstStarts)
     pMinimizer.setScales(lstScales)
 
-    print("Fitting... this may take a minute or two...")
+    print("Fitting omicron... this may take a minute or two...")
     nCount, pResult, nReason = pMinimizer.minimize()
     lstVertex = pResult.getVertex()
 
@@ -44,7 +48,7 @@ def runFitterPre(strFilename):
     strParameterFile = strFilename.replace(".dat", "_omicron_parameters.dat").replace("cities", "omicron")
     with open(strParameterFile, "w") as outFile:
         outFile.write("# slope: "+str(lstVertex[0])+"\n")
-        outFile.write("# Peak Date Day SDev Area\n")
+        outFile.write("# Peak Date Day SDev Area(days*copies/ml)\n")
         nCount = 1
         for nPeak in range(0, nParameters, 3):
             print(lstVertex[nPeak:nPeak+3])
@@ -69,7 +73,7 @@ def runFitterPre(strFilename):
             
 def runFitterPost(strFilename):
 
-    # set up minimizer
+    # set up minimizer: start dates [184, 458, 854] are from city_processing.py
     lstStarts = [50, 184, 90**2, 50, 458, 90**2, 50, 854, 90**2]
     lstScales = [10, 10, 1000, 10, 10, 1000, 10, 10, 1000]
     nParameters = len(lstStarts)
@@ -101,7 +105,7 @@ def runFitterPost(strFilename):
     lstAreas = []
     with open(strParameterFile, "w") as outFile:
         outFile.write("# slope: "+str(lstVertex[0])+"\n")
-        outFile.write("# Peak Date Day SDev Area\n")
+        outFile.write("# Peak Date Day SDev Area(days*copies/ml)\n")
         nCount = 1
         for nPeak in range(0, nParameters, 3):
             print(lstVertex[nPeak:nPeak+3])
@@ -133,15 +137,24 @@ if __name__ == "__main__":
     # VOL. 386 NO. 24
     fInfectedFraction = 0.303
 
+# populations are from 2021 census as reported by Wikipedia
+# https://en.wikipedia.org/wiki/Population_of_Canada_by_province_and_territory
+
     mapCities = {
 "halifax.dat": 228280,
-"metro_vancouver.dat": 2642825,
 "north_battleford.dat": 13836,
-"prince_albert.dat": 37756,
 "regina.dat": 226404,
 "saskatoon.dat": 266141,
 "toronto.dat": 2794356,
-"winnipeg.dat": 749607}
+"winnipeg.dat": 749607,
+"metro_vancouver.dat": 2642825,
+"british_columbia.dat": 5000879,
+"alberta.dat": 4262635,
+"saskatchewan.dat": 1132505,
+"manitoba.dat": 1342153,
+"ontario.dat": 14223942,
+"nova_scotia.dat": 969383,
+"canada.dat": 36991981}
 
     mapRatios = {}
     with open(os.path.join("omicron", "city_ratios.dat"), "w") as outFile:
@@ -153,20 +166,21 @@ if __name__ == "__main__":
             mapRatios[strCity] = fRatio
             outFile.write(strCity.replace(".dat","")+" "+str(fRatio)+"\n")
         
-    strPlot = "plot "
+    strPlot = "plot " # plot command for wave areas
     for strCity in mapCities.keys():
         strOutputFile = os.path.join("fits", strCity.replace(".dat", "_waves.dat"))
         strPlot += '"'+strOutputFile+'" title "'+strCity.replace(".dat","").upper()+'", '
         with open(strOutputFile, "w") as outFile:
-            outFile.write("# wave infectedCount\n")
+            outFile.write("# population: "+str(mapCities[strCity])+"\n")
+            outFile.write("# wave infectedFraction\n")
             lstAreas = runFitterPost(os.path.join("cities", strCity))
             fRatio = mapRatios[strCity]
             nPopulation = mapCities[strCity]
             print()
-            print(strCity.replace(".dat","").upper())
+            print(strCity.replace(".dat","").replace("_"," ").upper(), "infected fraction")
             for nI, fArea in enumerate(lstAreas):
                 print(int(fArea*fRatio)/nPopulation, end=' ')
-                outFile.write(str(nI+2023)+" "+str(fArea)+"\n")
+                outFile.write(str(nI+2023)+" "+str(fArea*fRatio/nPopulation)+"\n")
             print()
             print()
     

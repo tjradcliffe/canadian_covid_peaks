@@ -65,3 +65,36 @@ appear to be a lull in the spring and a peak in the late
 fall. This is quite different from the early years of the
 ongoing pandemic.
 
+2026-06-01
+
+Expanded cases to cover provinces and the whole country.
+
+One possible pattern is that the higher the previous wave,
+the lower (in area) the current wave, suggesting some
+persistent immuity among the population. With only three
+waves to work with it's a little early to draw any strong
+conclusion, though.
+
+NOTE the unit of data is "copies/ml", so areas 
+are days*copies/ml
+
+Plausibly there is a summer wave followed by a winter
+wave, with a minor peak around September 1 and a
+major peak in the first few months of the year. It really
+is too soon to say, and my goal here is NOT to model
+the yearly curve with the greatest accuracy but to show
+how an approximate model of the pandemic responds
+to a particular intervention: masking or otherwise reduced
+spread in the LULLs as opposed to at the PEAKs. That is,
+intervening when cases are low, like an engineer, not
+when cases are high, like a physician or MPH.
+
+SO: the next step is to see if I can model all three waves
+with a SEIRS model or MC across jurisdictions with
+similar model parameters, ideally independent of the
+size of the place. I'm interested in the smaller cities as
+places that might experience extinction events, especially
+in the spring.
+
+"The Effect of Early vs Late Intervention on Pandemic Curves"
+
