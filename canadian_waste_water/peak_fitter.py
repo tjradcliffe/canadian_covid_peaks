@@ -47,15 +47,14 @@ def runFitterPre(strFilename):
     strOutputFile = strFilename.replace(".dat", "_omicron_fit.dat").replace("cities", "omicron")
     strParameterFile = strFilename.replace(".dat", "_omicron_parameters.dat").replace("cities", "omicron")
     with open(strParameterFile, "w") as outFile:
-        outFile.write("# slope: "+str(lstVertex[0])+"\n")
-        outFile.write("# Peak Date Day SDev Area(days*copies/ml)\n")
+        outFile.write("# Peak Date SDev Area(days*copies/ml)\n")
         nCount = 1
         for nPeak in range(0, nParameters, 3):
             print(lstVertex[nPeak:nPeak+3])
             fSDev = math.sqrt(lstVertex[nPeak+2]/2)
             fArea = lstVertex[nPeak]*math.sqrt(2*math.pi)*fSDev
             pDate = pStartDate+timedelta(days=lstVertex[nPeak+1])
-            outFile.write(" ".join(map(str, (nCount, pDate, lstVertex[nPeak+1], fSDev, fArea)))+"\n")
+            outFile.write(" ".join(map(str, (nCount, pDate, fSDev, fArea)))+"\n")
             nCount += 1
 
     print("Writing fit and components to: ", strOutputFile)
@@ -104,8 +103,7 @@ def runFitterPost(strFilename):
     strParameterFile = strFilename.replace(".dat", "_parameters.dat").replace("cities", "fits")
     lstAreas = []
     with open(strParameterFile, "w") as outFile:
-        outFile.write("# slope: "+str(lstVertex[0])+"\n")
-        outFile.write("# Peak Date Day SDev Area(days*copies/ml)\n")
+        outFile.write("# Peak Date SDev Area(days*copies/ml)\n")
         nCount = 1
         for nPeak in range(0, nParameters, 3):
             print(lstVertex[nPeak:nPeak+3])
@@ -113,7 +111,7 @@ def runFitterPost(strFilename):
             fArea = lstVertex[nPeak]*math.sqrt(2*math.pi)*fSDev
             lstAreas.append(fArea)
             pDate = pStartDate+timedelta(days=lstVertex[nPeak+1])
-            outFile.write(" ".join(map(str, (nCount, pDate, lstVertex[nPeak+1], fSDev, fArea)))+"\n")
+            outFile.write(" ".join(map(str, (nCount, pDate, fSDev, fArea)))+"\n")
             nCount += 1
 
     print("Writing fit and components to: ", strOutputFile)

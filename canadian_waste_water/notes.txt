@@ -98,3 +98,6 @@ in the spring.
 
 "The Effect of Early vs Late Intervention on Pandemic Curves"
 
+2026-06-02
+
+Start on SEIRS model for individual peaks
