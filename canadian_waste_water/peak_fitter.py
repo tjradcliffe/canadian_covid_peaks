@@ -54,7 +54,8 @@ def runFitterPre(strFilename):
             fSDev = math.sqrt(lstVertex[nPeak+2]/2)
             fArea = lstVertex[nPeak]*math.sqrt(2*math.pi)*fSDev
             pDate = pStartDate+timedelta(days=lstVertex[nPeak+1])
-            outFile.write(" ".join(map(str, (nCount, pDate, fSDev, fArea)))+"\n")
+            # factor of 7 to convert weeks to days
+            outFile.write(" ".join(map(str, (nCount, pDate, fSDev, 7*fArea)))+"\n")
             nCount += 1
 
     print("Writing fit and components to: ", strOutputFile)
@@ -111,7 +112,8 @@ def runFitterPost(strFilename):
             fArea = lstVertex[nPeak]*math.sqrt(2*math.pi)*fSDev
             lstAreas.append(fArea)
             pDate = pStartDate+timedelta(days=lstVertex[nPeak+1])
-            outFile.write(" ".join(map(str, (nCount, pDate, fSDev, fArea)))+"\n")
+            # factor of 7 to convert from weeks to days
+            outFile.write(" ".join(map(str, (nCount, pDate, fSDev, 7*fArea)))+"\n")
             nCount += 1
 
     print("Writing fit and components to: ", strOutputFile)
@@ -177,8 +179,8 @@ if __name__ == "__main__":
             print()
             print(strCity.replace(".dat","").replace("_"," ").upper(), "infected fraction")
             for nI, fArea in enumerate(lstAreas):
-                print(int(fArea*fRatio)/nPopulation, end=' ')
-                outFile.write(str(nI+2023)+" "+str(fArea*fRatio/nPopulation)+"\n")
+                print(int(fArea*fRatio)/nPopulation, end=' ') # factor of seven to convert area to days from weeks
+                outFile.write(str(nI+2023)+" "+str(7*Area*fRatio/nPopulation)+"\n")
             print()
             print()
     

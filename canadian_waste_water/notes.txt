@@ -101,3 +101,48 @@ in the spring.
 2026-06-02
 
 Start on SEIRS model for individual peaks
+
+2026-06-04
+
+Epidemiology is such a mess. There is no attempt to
+sanity-check anything epidemiologists say. For example,
+there is the paper cited above that says omicron wave 1
+infected about 1/3 of Canadians. This, coupled with my
+waste-water analysis that says recent peaks have been
+of the same area as omicron1, suggests that 1/3 of all
+Canadians get infected every year. This implies via the
+Poisson distribution that around 13% of Canadians have
+NOT have covid, and that *I* have the average number
+of infections, which is 2. This is implausible. Even I'm not
+that unlucky. Furthermore, it has recently been suggested
+that over 98% of people have had covid, often without
+symptoms. But this implies that the average number of
+infections is 4, via p(mean=4, 0) ~ 0.018 for the
+Poisson distribution.
+
+SO: the total number of covid cases in the omicron1
+wave was much higher than 30%. There is no other
+way to work this out. This is also what I'm seeing in
+terms of fits, which don't work unless the total number
+is higher than expected.
+
+Which means there are no fixed points in all this,
+because epidemiology is not a science and 
+epidemiologists are not scientists. They don't run
+any kind of empirical or theoretical sanity check on
+their work.
+
+By the summer of 2022 (2.5 years in) 54% of Canadians
+had anti-bodies, which implies a true infection rate of
+over 60%. THAT implies a 40% infection rate per year,
+as p(mean=1, 0) = 0.36 and 1/2.5 = 0.4.
+
+So the numbers are all over the place.
+
+4/6 = 0.67 infections per year.
+
+SO: how do I use this to recalibrate things?
+
+What I can say so far is that the last three year peaks
+are comparable in area to omicron1. But I don't know
+how many people were in omicron1.

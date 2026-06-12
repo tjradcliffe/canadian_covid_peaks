@@ -208,6 +208,9 @@ class Gaussian:
     def __call__(self, pDate):
         return self.fNorm*math.exp(-(pDate-self.pDate).days**2/self.f2Var)
 
+    def getStartDay(self):
+        return math.sqrt(-math.log(1/self.fNorm)*self.f2Var)
+
 ### MODEL PARAMETERS 
 
 # simulation parameters
@@ -223,15 +226,15 @@ fPopulation = 38E6 # Canada
 fEncounterRate = 20 # per day. This sets rate scales for whole simulation as "per day"
 
 # minimization parameters
-fInfectionProbabilityPerEncounter, fTei, fTer = 0.1, 1, 10
-
+fInfectionProbabilityPerEncounter, fTei, fTer = 0.008, 2.5, 11.5
+            
 # Run the SEIR model for a given set of parameters and return the history
-def SEIRModel(fInfectionProbabilityPerEncounter, fTei, fTer, nDays = 120):
+def SEIRModel(fInfectionProbabilityPerEncounter, fTei, fTer, nDays = 1000):
         
         # convenience factor describing infection probability per infected person
         fFactor = fEncounterRate*fInfectionProbabilityPerEncounter/fPopulation
         
-        fInfectious = 6.0 # set up solver with 6 infectious people
+        fInfectious = 1 # starting population
         fTimeStep = 1.0 # days
         pSolver = RungeKutta(nDays, fTimeStep)
         pHistory = History() # define here so equatins can have access to it
@@ -261,13 +264,15 @@ class SEIRModelObjective:
         fInfectionProbabilityPerEncounter, fTei, fTer  = lstParams
 
         pHistory = SEIRModel(fInfectionProbabilityPerEncounter, fTei, fTer)
-                
+        fMax = max(pHistory.lstInfectious)
+        nMaxIndex = pHistory.lstInfectious.index(fMax)        
+        self.nOffset = self.nMaxIndex-nMaxIndex
         fRMS = 0.0
         nCount = 0
         for nI, fData in enumerate(pHistory.lstInfectious):
             nIndex = nI+self.nOffset
             if nIndex >= 0 and nIndex < len(self.lstPeakData):
-                fRMS += (self.lstPeakData[nI+self.nOffset]-fData)**2
+                fRMS += (self.lstPeakData[nIndex]-fData)**2
                 nCount += 1
         fRMS = math.sqrt(fRMS/nCount)
         
@@ -295,31 +300,37 @@ if __name__ == "__main__":
     pGaussian = Gaussian(pDate, fSdev, fArea, fInfectionsPerCopy)
     print("Peak data for", strRegion.capitalize()+":", pDate, fSdev, fArea, fInfectionsPerCopy)
 
+    nDays = int(pGaussian.getStartDay()+1)
     lstPeakData = []
     lstDates = []
-    for nI in range(-60, 60):
+    for nI in range(-nDays, nDays+1):
         lstDates.append(pDate+timedelta(days=nI))
         lstPeakData.append(pGaussian(lstDates[-1]))
-        print(lstDates[-1], lstPeakData[-1])
-    if False:
+        
+    if True:
         # RMS error
         pObjective = SEIRModelObjective(lstPeakData)
 
         # build the minimizer 
         pMinimizer = SimpleMinimizer(3)
         pMinimizer.setStarts([fInfectionProbabilityPerEncounter, fTei, fTer])
-        lstScales = [0.005, 0.5, 0.5]
+        lstScales = [0.0075, 1, 1]
         pMinimizer.setScales(lstScales)
         pMinimizer.setObjective(pObjective)
         nCount, pFinal, nReason = pMinimizer.minimize()
         print("Minimization report: ", pMinimizer.getConvergenceReason(nReason))
         lstParams = pFinal.getVertex()
+        print(lstParams)
         fInfectionProbabilityPerEncounter, fTei, fTer = lstParams
             
     # minimization parameters
-    fInfectionProbabilityPerEncounter, fTei, fTer = 0.018, 0.5, 7
+    fInfectionProbabilityPerEncounter, fTei, fTer = 0.012, 3, 14
             
     lstInfectious = SEIRModel(fInfectionProbabilityPerEncounter, fTei, fTer).lstInfectious
+    fMax = max(lstInfectious)
+    nMaxIndex = lstInfectious.index(fMax)        
+    nOffset = nDays-nMaxIndex
+    
     with open("omicron/"+strRegion+"_seir_fit.dat", "w") as outFile:
         for nI, fFit in enumerate(lstPeakData):
-            outFile.write(str(lstDates[nI])+" "+str(fFit)+" "+str(lstInfectious[nI])+"\n")
+            outFile.write(str(lstDates[nI])+" "+str(fFit)+" "+str(lstInfectious[nI-nOffset])+"\n")
